@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tarot - Oráculo Moderno Oficial</title>
+    <style>
+        /* Estilos Base e Proteção */
+        body { 
+            font-family: 'Georgia', serif; 
+            background: #05050a; 
+            color: #d4af37; 
+            margin: 0; 
+            padding-bottom: 50px; 
+            overflow-x: hidden;
+            user-select: none; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; text-align: center; }
+
+        /* Secção de Orientações */
+        .box-orientacoes {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #f1e4bc;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .box-orientacoes h2 { color: #d4af37; margin-top: 0; font-variant: small-caps; letter-spacing: 2px; }
+        .pergunta-mentalizar { font-style: italic; color: #fff; display: block; margin-top: 15px; }
+
+        /* Controles e Botões */
+        .controles { margin: 20px 0; min-height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        button { 
+            background: #d4af37; color: #05050a; border: none; padding: 15px 40px; 
+            font-size: 1.2em; cursor: pointer; border-radius: 8px; font-weight: bold;
+            transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 100;
+        }
+        button:hover { transform: scale(1.05); background: #f1c40f; box-shadow: 0 0 20px #d4af37; }
+        .hidden { display: none !important; }
+
+        /* Palco e Cartas */
+        #palco { 
+            position: relative; width: 100%; height: 320px; margin: 20px 0; 
+            display: flex; justify-content: center; align-items: center; perspective: 1500px;
+        }
+        .carta { 
+            position: absolute; width: 125px; height: 210px; 
+            cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
+            transform-style: preserve-3d;
+        }
+        .face { 
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; 
+            border-radius: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        .verso { 
+            background: #1a1a2e; border: 2px solid #d4af37;
+            background-image: radial-gradient(circle, #d4af37 1px, transparent 1px); 
+            background-size: 10px 10px; 
+        }
+        .frente { background: #fff; transform: rotateY(180deg); border: 1px solid #000; }
+        .frente img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Mesa e Slots */
+        .mesa { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
+        .slot { 
+            width: 145px; height: 230px; border: 2px dashed rgba(212, 175, 55, 0.2); 
+            border-radius: 12px; padding: 5px; background: rgba(255,255,255,0.01);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .slot-title { font-size: 0.75em; color: #fff; margin-bottom: 10px; height: 35px; text-transform: uppercase; font-weight: bold; opacity: 0.8; line-height: 1.2; }
+
+        /* Análise */
+        #analise { 
+            max-width: 850px; margin: 50px auto; padding: 40px; 
+            background: rgba(10, 10, 20, 0.98); border-radius: 20px; 
+            border: 1px solid #d4af37; text-align: left; 
+            display: none; animation: fadeIn 1s ease-out;
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+        }
+        .item-analise { margin-bottom: 30px; line-height: 1.7; border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding-bottom: 20px; }
+        .item-analise strong { color: #d4af37; font-size: 1.2em; display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .carta-nome-txt { color: #fff; font-style: italic; font-weight: bold; border-bottom: 1px solid #fff; padding-bottom: 2px; }
+
+        footer { margin-top: 50px; padding: 20px; font-size: 0.85em; color: rgba(212, 175, 55, 0.6); border-top: 1px solid rgba(212, 175, 55, 0.2); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="container">
+    <h1>🔮 Oráculo Moderno</h1>
+
+    <div id="instrucoes" class="box-orientacoes">
+        <h2>Momento de Conexão</h2>
+        Antes de iniciar sua tiragem, reserve um breve momento para se conectar com o agora. 
+        Feche os olhos, respire fundo três vezes, relaxe e solte as tensões do corpo a cada expiração. <br>
+        Após as respirações, abra os olhos e mentalize a pergunta:
+        <span class="pergunta-mentalizar">
+            "O que eu preciso saber nesse momento sobre o meu dia de hoje? <br>
+            Qual é o foco principal do meu dia, que desafio eu poderei estar enfrentando e qual a minha melhor ação para hoje? <br>
+            Que Deus me conduza nesse momento e guie a minha inteligência."
+        </span>
+    </div>
+
+    <div class="controles">
+        <button id="btn-embaralhar" onclick="fluxoResetMisturar()">Misturar e Jogar</button>
+        <button id="btn-escolher" class="hidden" onclick="abrirLeque()">Distribuir Cartas</button>
+        <h2 id="msg-escolha" class="hidden" style="color: #fff; font-weight: normal;">Escolha 3 cartas intuitivamente...</h2>
+    </div>
+
+    <div id="palco"></div>
+
+    <div class="mesa">
+        <div class="slot" id="slot-1"><div class="slot-title">1. Foco do Dia</div></div>
+        <div class="slot" id="slot-2"><div class="slot-title">2. Desafios</div></div>
+        <div class="slot" id="slot-3"><div class="slot-title">3. Atitude</div></div>
+    </div>
+
+    <div id="analise">
+        <div class="item-analise" id="txt-1"><strong>☀️ Foco do Dia</strong><span></span></div>
+        <div class="item-analise" id="txt-2"><strong>⚠️ Desafio</strong><span></span></div>
+        <div class="item-analise" id="txt-3"><strong>🧘 Melhor Atitude</strong><span></span></div>
+    </div>
+
+    <footer>
+        &copy; 2024 Manuscrito do Oráculo Moderno. Todos os direitos reservados.
+    </footer>
+</div>
+
+<script>
+    const baralhoMaster = [
+        // ARCANOS MAIORES
+        { n: "0. O Louco", img: "https://www.sacred-texts.com/tarot/pkt/img/ar00.jpg", f: "Um salto no desconhecido. A energia é de novos começos, espontaneidade e liberdade. É um dia para confiar no universo e não se levar tão a sério.", d: "Falta de planejamento ou imprudência. O risco de agir sem olhar para onde está pisando ou ignorar avisos óbvios de perigo.", a: "Adote a mente de principiante. Arrisque-se, seja leve e permita-se o erro. O momento pede coragem, não cautela excessiva." },
+        { n: "I. O Mago", img: "https://www.sacred-texts.com/tarot/pkt/img/ar01.jpg", f: "Manifestação e iniciativa. Você tem todas as ferramentas para fazer as coisas acontecerem. A energia é de competência, ação e poder pessoal.", d: "Dispersão de energia ou manipulação. Tentar fazer muitas coisas ao mesmo tempo sem concluir nenhuma, ou usar sua influência de forma desonesta.", a: "Foque sua vontade. Use suas habilidades práticas. É o dia de 'dar o play' nos projetos e assumir o controle da situação." },
+        { n: "II. A Sacerdotisa", img: "https://www.sacred-texts.com/tarot/pkt/img/ar02.jpg", f: "Intuição e mistério. O dia pede recolhimento e observação. Nem tudo está visível na superfície; confie no seu 'sexto sentido' e nos sinais.", d: "Passividade excessiva ou segredos que incomodam. O risco de se isolar demais do mundo real ou ignorar fatos lógicos por estar 'perdido' em sonhos.", a: "Silencie. Antes de agir, ouça sua voz interior. Observe os bastidores e guarde seus planos para si mesmo por enquanto." },
+        { n: "III. A Imperatriz", img: "https://www.sacred-texts.com/tarot/pkt/img/ar03.jpg", f: "Abundância e criatividade. A energia é de nutrição, prazer sensorial e crescimento. Ótimo dia para cuidar de projetos, da casa, da beleza ou da família.", d: "Superproteção ou gastos excessivos. O risco de sufocar alguém com cuidados ou se perder na indulgência material e na procrastinação.", a: "Seja generoso e criativo. Deixe as coisas florescerem no tempo delas. Conecte-se com a natureza e com o prazer de estar vivo." },
+        { n: "IV. O Imperador", img: "https://www.sacred-texts.com/tarot/pkt/img/ar04.jpg", f: "Estrutura e autoridade. O foco está na organização, no estabelecimento de limites e na proteção do que é seu. Energia de estabilidade e liderança.", d: "Rigidez ou autoritarismo. Ser inflexível demais com os outros (ou consigo mesmo) a ponto de travar o movimento e a cooperação.", a: "Coloque ordem na casa. Planeje com lógica e firmeza. Assuma suas responsabilidades com seriedade e seja o pilar de segurança hoje." },
+        { n: "V. O Hierofante", img: "https://www.sacred-texts.com/tarot/pkt/img/ar05.jpg", f: "Tradição e conhecimento. Dia de seguir as regras, buscar conselhos de mentores ou focar em estudos e questões institucionais.", d: "Dogmatismo ou pressão social. O risco de seguir padrões apenas para agradar os outros, mesmo quando eles não fazem mais sentido para você.", a: "Busque sabedoria em quem já trilhou o caminho. Respeite os processos estabelecidos e aja com ética e compromisso." },
+        { n: "VI. Os Enamorados", img: "https://www.sacred-texts.com/tarot/pkt/img/ar06.jpg", f: "Escolhas e parcerias. A energia é de alinhamento de valores, decisões importantes e conexões afetivas. O foco é o que (ou quem) seu coração escolhe.", d: "Indecisão ou conflito de valores. Ficar em cima do muro ou tentar agradar a dois caminhos opostos, gerando ansiedade e desequilíbrio.", a: "Escolha com base no que você ama e acredita. Alinhe sua mente com o seu coração e comprometa-se com a sua decisão." },
+        { n: "VII. O Carro", img: "https://www.sacred-texts.com/tarot/pkt/img/ar07.jpg", f: "Vitória e determinação. Energia de movimento rápido, superação de obstáculos e controle sobre forças opostas. O foco é o triunfo pela força de vontade.", d: "Perda de controle ou agressividade. O risco de 'atropelar' as pessoas no caminho ou ser levado por impulsos contraditórios.", a: "Mantenha as rédeas firmes. Tenha foco total no seu objetivo e não se desvie. A vitória depende da sua disciplina e persistência." },
+        { n: "VIII. A Justiça", img: "https://www.sacred-texts.com/tarot/pkt/img/ar08.jpg", f: "Equilíbrio e causa e efeito. O dia pede objetividade, honestidade e ajustes de contas. O foco está na verdade nua e crua.", d: "Preconceito ou burocracia. O risco de ser excessivamente crítico ou se perder em julgamentos severos que ignoram o lado humano.", a: "Aja com integridade. Pese todos os lados antes de decidir. Aceite as consequências dos seus atos com maturidade e retidão." },
+        { n: "IX. O Eremita", img: "https://www.sacred-texts.com/tarot/pkt/img/ar09.jpg", f: "Busca interior e prudência. Energia de isolamento necessário, reflexão profunda e busca pela verdade pessoal. O foco é a sua própria luz.", d: "Solidão amarga ou lentidão excessiva. O risco de se fechar para o mundo por medo ou demorar tanto para refletir que a oportunidade passa.", a: "Recolha-se. Busque a resposta dentro de você, não fora. Seja discreto, paciente e aja apenas quando tiver clareza total." },
+        { n: "X. A Roda da Fortuna", img: "https://www.sacred-texts.com/tarot/pkt/img/ar10.jpg", f: "Mudança e destino. O dia traz reviravoltas, ciclos que se fecham e outros que se abrem. A energia é de movimento inesperado.", d: "Instabilidade ou resistência ao fluxo. Tentar controlar o incontrolável ou sentir-se vítima das circunstâncias externas.", a: "Adapte-se. Entenda que tudo passa. Aproveite o movimento ascendente da roda e não se desespere com os baixos; hoje, a flexibilidade é sua melhor amiga." },
+        { n: "XI. A Força", img: "https://www.sacred-texts.com/tarot/pkt/img/ar11.jpg", f: "Coragem e domínio próprio. O foco está na força interior, na paciência e na capacidade de domar seus 'leões internos' (emoções e instintos).", d: "Medo ou impulsividade. Deixar-se dominar pela raiva ou pela insegurança, perdendo a elegância e a resiliência diante dos problemas.", a: "Use a suavidade em vez da força bruta. Seja paciente e autoconfiante. A verdadeira força hoje vem da compaixão e do autocontrole." },
+        { n: "XII. O Pendurado", img: "https://www.sacred-texts.com/tarot/pkt/img/ar12.jpg", f: "Nova perspectiva e pausa. A energia é de suspensão e sacrifício voluntário. O foco é olhar para a vida de um ângulo diferente, mesmo que pareça parado.", d: "Paralisia ou papel de mártir. Ficar preso em uma situação sem agir por puro medo, ou reclamar de um sacrifício que você mesmo escolheu.", a: "Solte o controle. Não force nada hoje. Use esse tempo de espera para meditar e mudar seu ponto de vista. Às vezes, render-se é o caminho para a iluminação." },
+        { n: "XIII. A Morte", img: "https://www.sacred-texts.com/tarot/pkt/img/ar13.jpg", f: "Transformação e encerramento. Algo precisa morrer para que o novo nasça. A energia é de limpeza, cortes necessários e renovação profunda.", d: "Resistência à mudança. Tentar segurar algo que já apodreceu, gerando sofrimento desnecessário e impedindo o fluxo da vida.", a: "Deixe ir. Aceite o fim de um ciclo sem olhar para trás. Limpe o espaço, desapegue-se do que não serve mais e prepare o terreno para o novo." },
+        { n: "XIV. A Temperança", img: "https://www.sacred-texts.com/tarot/pkt/img/ar14.jpg", f: "Equilíbrio e moderação. Energia de cura, paciência e alquimia. O foco é misturar opostos para encontrar o caminho do meio e a harmonia.", d: "Desequilíbrio ou impaciência. Tentar apressar processos naturais ou cair em extremos (muito trabalho ou muito descanso, por exemplo).", a: "Seja paciente e diplomático. Busque a harmonia em todas as áreas. Aja com calma e misture os ingredientes da sua vida com sabedoria e parcimônia." },
+        { n: "XV. O Diabo", img: "https://www.sacred-texts.com/tarot/pkt/img/ar15.jpg", f: "Apego e sombra. O dia ilumina seus desejos mais profundos, vícios, dependências ou ambições materiais. Energia de magnetismo e tentação.", d: "Prisão mental ou excessos. Sentir-se escravo de uma situação, pessoa ou hábito, acreditando que não tem escolha para sair de onde está.", a: "Encare suas correntes. Reconheça onde você está se prendendo por medo ou prazer imediato. Use o poder da consciência para entender suas sombras sem se deixar dominar por elas." },
+        { n: "XVI. A Torre", img: "https://www.sacred-texts.com/tarot/pkt/img/ar16.jpg", f: "Ruptura e revelação. Mudanças súbitas que destroem estruturas falsas. A energia é de choque, mas serve para libertar você de uma prisão invisível.", d: "Caos ou negação. O sofrimento de ver algo desabar e tentar, em vão, segurar os escombros de uma situação que não tinha base sólida.", a: "Deixe cair o que não é verdadeiro. Não lute contra a destruição; entenda que ela é necessária para a reconstrução. Mantenha a calma no centro da tempestade." },
+        { n: "XVII. A Estrela", img: "https://www.sacred-texts.com/tarot/pkt/img/ar17.jpg", f: "Esperança e inspiração. Após a tempestade, vem a calma. Energia de cura, renovação da fé e clareza sobre o futuro. O foco é a sua paz interior.", d: "Desânimo ou falta de pé no chão. Perder-se em sonhos distantes e esquecer de agir no presente, ou duvidar de que dias melhores virão.", a: "Confie e brilhe. Seja autêntico e compartilhe sua luz com os outros. Mantenha a fé em seus sonhos, pois o universo está enviando sinais de cura e proteção." },
+        { n: "XVIII. A Lua", img: "https://www.sacred-texts.com/tarot/pkt/img/ar18.jpg", f: "Intuição e ilusão. O reino do subconsciente, dos sonhos e das incertezas. A energia é oscilante e pede cuidado com o que parece ser, mas não é.", d: "Medo irracional ou confusão. Perder-se em paranóias, mentiras ou inseguranças profundas que não têm base na realidade concreta.", a: "Navegue nas águas emocionais com cautela. Não tome decisões definitivas agora, pois a luz é instável. Confie na sua intuição, mas mantenha os pés no chão." },
+        { n: "XIX. O Sol", img: "https://www.sacred-texts.com/tarot/pkt/img/ar19.jpg", f: "Clareza e alegria. O ápice do sucesso, da vitalidade e da verdade. Tudo está iluminado e o foco é a felicidade plena e a realização.", d: "Arrogância ou excesso de exposição. O risco de 'queimar' os outros com o seu brilho ou ser ingênuo diante de situações que pedem seriedade.", a: "Brilhe com generosidade. Celebre suas conquistas e seja otimista. Aja com transparência e deixe que sua alegria contagie o ambiente ao seu redor." },
+        { n: "XX. O Julgamento", img: "https://www.sacred-texts.com/tarot/pkt/img/ar20.jpg", f: "Chamado e despertar. É o momento de uma grande conclusão ou de um 'renascimento'. O foco é ouvir o chamado para uma vida mais autêntica e significativa.", d: "Autocrítica excessiva ou medo de mudar. O risco de ficar preso ao passado por medo do julgamento alheio ou da própria consciência.", a: "Perdoe o passado e siga o chamado. Avalie sua trajetória com honestidade e aceite a transformação. É hora de despertar para um novo nível de consciência." },
+        { n: "XXI. O Mundo", img: "https://www.sacred-texts.com/tarot/pkt/img/ar21.jpg", f: "Realização e completude. O fechamento perfeito de um ciclo. A energia é de integração, sucesso mundial e a sensação de estar no lugar certo, na hora certa.", d: "Medo de finalizar ou falta de visão. Recusar-se a celebrar a vitória por já estar preocupado com o próximo passo, ou sentir-se limitado quando o horizonte é vasto.", a: "Comemore! Sinta a plenitude do agora. Você completou a jornada. Reconheça seu sucesso e abra-se para o mundo; você está pronto para novos e maiores horizontes." },
+
+        // PAUS
+        { n: "Ás de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waac.jpg", f: "Uma centelha de inspiração. A energia é de um novo começo empolgante, uma ideia brilhante ou um surto de vitalidade. É o momento de plantar a semente de um projeto.", d: "Falta de direção ou pressa excessiva. O risco de se empolgar com a novidade, mas não ter onde canalizar essa energia, desperdiçando o potencial inicial.", a: "Agarre a oportunidade! Use esse ímpeto para iniciar algo que te apaixona. Não se preocupe com os detalhes agora; foque no movimento inicial." },
+        { n: "2 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa02.jpg", f: "Planejamento e visão de futuro. Você está em uma posição de poder, olhando o horizonte e decidindo qual caminho seguir. A energia é de antecipação e escolha.", d: "Indecisão ou medo de sair da zona de conforto. O risco de ficar apenas olhando para o mapa e nunca chegar a cruzar a porta para o mundo real.", a: "Faça uma escolha consciente. O mundo está em suas mãos, mas você precisa se comprometer com um objetivo para que a expansão aconteça." },
+        { n: "3 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa03.jpg", f: "Expansão e espera ativa. Seus planos estão em movimento e você começa a ver os primeiros sinais de progresso. A energia é de crescimento e exploração comercial ou pessoal.", d: "Impaciência ou falta de visão de longo prazo. O risco de se desanimar porque os resultados finais ainda não chegaram, ou não estar preparado para o sucesso que vem vindo.", a: "Mantenha o olhar no horizonte. Confie no que você plantou. Este é o momento de buscar novas parcerias e expandir sua área de atuação." },
+        { n: "4 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa04.jpg", f: "Celebração e estabilidade. Um momento de harmonia, alegria compartilhada e sensação de 'chegar em casa'. Ótima energia para eventos sociais e marcos alcançados.", d: "Acomodação ou excesso de festividade. O risco de se dar por satisfeito cedo demais ou se distrair com celebrações quando ainda há bases a serem solidificadas.", a: "Celebre suas vitórias, por menores que sejam. Cultive a gratidão e fortaleça seus laços com as pessoas que te apoiam. Desfrute da paz que você construiu." },
+        { n: "5 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa05.jpg", f: "Conflito e competição. O dia traz uma energia de 'brainstorming' caótico, disputas de ego ou obstáculos pequenos que exigem jogo de cintura.", d: "Desorganização ou agressividade inútil. O risco de se perder em discussões que não levam a lugar nenhum ou levar competições saudáveis para o lado pessoal.", a: "Mantenha o foco no resultado, não no barulho. Use a tensão para aprender e evoluir. Às vezes, o atrito é necessário para que a melhor ideia sobreviva." },
+        { n: "6 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa06.jpg", f: "Reconhecimento e vitória. Você está em destaque. A energia é de sucesso público, elogios e a sensação de que seu esforço foi validado pelos outros.", d: "Orgulho excessivo ou dependência de aprovação. O risco de deixar o ego inflar demais ou temer que a queda venha logo após o triunfo.", a: "Aceite os aplausos com dignidade. Use essa onda de confiança para inspirar quem está ao seu redor. Você venceu essa etapa, aproveite o prestígio." },
+        { n: "7 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa07.jpg", f: "Defesa e resistência. Você está em uma posição de vantagem, mas está sendo desafiado. A energia é de 'um contra todos', exigindo coragem para manter sua posição.", d: "Esgotamento ou paranoia. O sentimento de estar sob ataque constante pode drenar suas forças. O risco é reagir de forma defensiva a coisas que não são ameaças.", a: "Não recue. Você tem o 'terreno alto' a seu favor. Defenda suas ideias e seus limites com firmeza. Sua persistência será sua maior arma hoje." },
+        { n: "8 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa08.jpg", f: "Velocidade e notícias. As coisas estão acontecendo muito rápido. Comunicações importantes, viagens ou o fim súbito de uma espera. A energia é de movimento fluido.", d: "Sobrecarga ou falta de foco. O risco de ser bombardeado por informações e não conseguir processar nada, ou agir com tanta pressa que comete erros bobos.", a: "Vá com o fluxo, mas mantenha a atenção. Limpe sua agenda para lidar com o que chegar. É um dia para decisões rápidas e ações diretas." },
+        { n: "9 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa09.jpg", f: "Resiliência e última etapa. Você está cansado, mas o objetivo está logo ali. A energia é de proteção, cautela e resistência final antes da conclusão.", d: "Exaustão ou desconfiança. O risco de se fechar demais para o mundo por medo de se ferir novamente, agindo com uma defensividade que já não é mais necessária.", a: "Aguente firme. Reúna suas últimas forças. Você passou por muito e essa experiência é sua proteção. Falta pouco para o descanso, não desista agora." },
+        { n: "10 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa10.jpg", f: "Sobrecarga e responsabilidade. Você está carregando um fardo pesado, talvez tentando fazer tudo sozinho. A energia é de esforço máximo e cansaço físico ou mental.", d: "Incapacidade de delegar ou martírio. O risco de colapsar sob o peso das obrigações porque você não sabe dizer 'não' ou não confia nos outros para ajudar.", a: "Finalize o que é essencial, mas planeje como soltar esse peso. Reconheça seus limites. É hora de completar a tarefa e prometar a si mesmo não aceitar mais carga do que pode carregar." },
+        { n: "Pajem de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wapa.jpg", f: "Curiosidade e descobertas. Uma mensagem empolgante ou o desejo de aprender algo novo. A energia é jovial, entusiasmada e cheia de potencial criativo.", d: "Imaturidade ou falta de compromisso. O risco de começar algo com muita sede ao pote e abandonar na primeira dificuldade por pura distração.", a: "Seja um eterno aprendiz. Explore novas ideias com entusiasmo. Permita-se ser um iniciante em algo e siga sua curiosidade sem medo do julgamento." },
+        { n: "Cavaleiro de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wakn.jpg", f: "Ação impetuosa e aventura. Energia de movimento, mudança de residência ou perseguição apaixonada de um objetivo. É o 'cavaleiro' que não espera por ninguém.", d: "Impulsividade ou arrogância. O risco de agir sem pensar nas consequências, 'queimar pontes' ou ser insensível com os outros na pressa de chegar onde quer.", a: "Canalize sua paixão em uma direção clara. Seja ousado, mas mantenha o controle sobre o seu ímpeto. Use seu carisma para abrir caminhos, não para atropelar pessoas." },
+        { n: "Rainha de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waqu.jpg", f: "Confiança e magnetismo. Você está radiante, independente e capaz de lidar com qualquer situação com calor e inteligência. O foco é a sua autoexpressão.", d: "Egocentrismo ou irritabilidade. Quando contrariada, essa energia pode se tornar mandona ou dramática demais. O risco é querer ser sempre o centro das atenções.", a: "Lidere com o coração e com o sorriso. Use sua intuição e sua coragem para iluminar o dia. Seja o sol de quem está ao seu redor, agindo com generosidade e brilho próprio." },
+        { n: "Rei de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waki.jpg", f: "Liderança visionária e autoridade. O foco está em grandes projetos, empreendedorismo e na capacidade de transformar visões em realidade através do comando.", d: "Tirania ou impaciência com os 'lentos'. O risco de se tornar um ditador que não ouve ninguém, focado apenas no seu próprio império e perdendo a empatia.", a: "Inspire pelo exemplo. Seja o líder que motiva através da visão e da integridade. Tome decisões grandes com coragem, mas não esqueça que grandes reinos são feitos de pessoas." },
+
+        // COPAS
+        { n: "Ás de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuac.jpg", f: "Despertar emocional. Uma nova oferta de amor, um insight espiritual ou uma onda de paz. O coração está aberto e receptivo.", d: "Vulnerabilidade excessiva ou carência. O risco de se afogar em emoções sem filtro ou esperar que algo externo preencha um vazio interno.", a: "Permita-se sentir. Seja receptivo ao amor e à compaixão. É um dia para 'encher o próprio cálice' e oferecer o melhor de si aos outros." },
+        { n: "2 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu02.jpg", f: "Conexão e afinidade. O foco está na troca equilibrada entre duas pessoas, seja um romance, uma amizade ou uma parceria de negócios harmoniosa.", d: "Dependência emocional ou focar apenas no outro. O risco de ignorar as próprias necessidades para manter a harmonia da relação.", a: "Busque parcerias. Colabore, converse e encontre pontos em comum. A união de forças hoje é o que trará os melhores resultados." },
+        { n: "3 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu03.jpg", f: "Celebração e amizade. Energia de grupo, reuniões alegres e apoio mútuo. O foco é compartilhar a felicidade com quem você gosta.", d: "Excesso de distração ou 'fofoca'. O risco de se perder em superficialidades sociais e esquecer das responsabilidades individuais.", a: "Comemore! Saia com amigos, agradeça pelo apoio que recebe e cultive um ambiente de leveza e camaradagem ao seu redor." },
+        { n: "4 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu04.jpg", f: "Introspecção e apatia. Você pode estar se sentindo desmotivado ou 'cheio' do que o mundo oferece. O foco é olhar para dentro para reavaliar seus desejos.", d: "Perder oportunidades por desinteresse. O risco de ignorar uma 'oferta do céu' porque está ocupado demais remoendo o que não tem.", a: "Não tome decisões por tédio. Use o recolhimento para meditar, mas fique atento aos sinais ao seu redor. Às vezes, o que você precisa está bem na sua frente." },
+        { n: "5 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu05.jpg", f: "Luto e arrependimento. O foco está no que foi perdido ou no que não saiu como o esperado. É um dia de processar a tristeza.", d: "Fixação no passado. O risco de ficar olhando apenas para as 'taças derramadas' e não ver que ainda há recursos e amor disponíveis atrás de você.", a: "Permita-se o luto, mas não more nele. Reconheça a dor, aprenda a lição e, quando estiver pronto, vire-se para ver o que ainda restou de bom." },
+        { n: "6 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu06.jpg", f: "Nostalgia e inocência. Reencontros com o passado, memórias de infância ou gestos de bondade simples. A energia é doce e reconfortante.", d: "Ficar preso no 'ontem'. O risco de idealizar o passado a ponto de não conseguir viver ou apreciar a realidade do presente.", a: "Resgate sua criança interior. Use as lições do passado para nutrir o seu presente. Seja gentil e generoso, como se estivesse oferecendo uma flor a alguém." },
+        { n: "7 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu07.jpg", f: "Imaginação e escolhas. Muitas opções e caminhos se abrem, mas nem todos são reais. Energia de sonhos, desejos e, às vezes, ilusão.", d: "Confusão ou castelos na areia. O risco de se perder em fantasias e promessas vazias, sem conseguir concretizar nenhuma das opções.", a: "Priorize. Analise cada opção com um pouco de ceticismo saudável. Escolha um objetivo real e foque nele para não se perder na névoa." },
+        { n: "8 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu08.jpg", f: "Desapego e busca espiritual. Você sente que algo chegou ao fim e decide ir embora em busca de algo mais profundo. O foco é a jornada da alma.", d: "Medo de deixar o conforto. O risco de continuar em uma situação vazia apenas por conveniência, ignorando o chamado para crescer.", a: "Siga em frente. Tenha coragem de se retirar para evoluir. O caminho pode ser solitário agora, mas é necessário para sua evolução." },
+        { n: "9 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu09.jpg", f: "Satisfação e contentamento. Conhecida como a carta dos desejos realizados. Você se sente bem consigo mesmo e com o que conquistou.", d: "Autocomplacência ou egoísmo. O risco de se tornar arrogante com o próprio sucesso ou se entregar excessivamente aos prazeres materiais.", a: "Desfrute do momento. Sinta gratidão pelo que você tem. É um dia para cuidar de si e celebrar sua própria felicidade com confiança." },
+        { n: "10 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu10.jpg", f: "Felicidade plena e harmonia familiar. O foco está no bem-estar coletivo, no amor duradouro e na sensação de que tudo está no seu devido lugar.", d: "Idealização da perfeição. O risco de se frustrar se a realidade não for exatamente como um 'comercial de TV' ou esconder problemas para manter as aparências.", a: "Valorize seus laços. Nutra o ambiente doméstico e as relações próximas. Compartilhe sua alegria e busque a paz que vem da convivência harmoniosa." },
+        { n: "Pajem de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cupa.jpg", f: "Sensibilidade e mensagens intuitivas. Uma surpresa agradável, um convite romântico ou o despertar de uma nova veia artística.", d: "Imaturidade emocional ou hipersensibilidade. O risco de se ofender por qualquer coisa ou agir de forma infantil diante de sentimentos complexos.", a: "Esteja aberto ao inesperado. Ouça sua intuição e expresse seus sentimentos com a pureza de uma criança. Siga os sinais do seu coração." },
+        { n: "Cavaleiro de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cukn.jpg", f: "Romance e busca pelo ideal. Você está em busca de beleza, harmonia e conexão. Energia de galanteio, sonhos e propostas artísticas.", d: "Inconstância ou idealismo excessivo. O risco de se apaixonar pela ideia do amor, mas fugir quando a realidade exige esforço e pés no chão.", a: "Siga seus sonhos, mas com consciência. Seja diplomático e gentil nas suas abordagens. Use sua criatividade para encantar, mas não prometa o que não pode cumprir." },
+        { n: "Rainha de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuqu.jpg", f: "Empatia e intuição profunda. Você está em sintonia com os sentimentos alheios e com os seus próprios. O foco é o acolhimento e a escuta.", d: "Instabilidade emocional ou absorver a dor do outro. O risco de se tornar uma 'esponja' emocional e acabar sobrecarregado pelo drama alheio.", a: "Seja o porto seguro. Confie na sua percepção espiritual. Ajude quem precisa, mas mantenha sua taça firme; cuide de si para poder cuidar dos outros." },
+        { n: "Rei de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuki.jpg", f: "Equilíbrio emocional e sabedoria. Você domina seus sentimentos e sabe agir com calma mesmo sob pressão. O foco é a maturidade e o aconselhamento.", d: "Manipulação emocional ou frieza mascarada. O risco de usar o conhecimento sobre o outro para controlar a situação ou se fechar em uma postura 'superior'.", a: "Aja com serenidade. Seja o líder compassivo. Use sua experiência para mediar conflitos e manter a estabilidade emocional ao seu redor." },
+
+        // OUROS
+        { n: "Ás de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/peac.jpg", f: "Oportunidade material sólida. Uma nova fonte de renda, um projeto promissor ou um investimento na saúde. O foco é a prosperidade tangível.", d: "Ganância ou medo de investir. O risco de deixar a oportunidade passar por insegurança ou querer resultados imediatos sem plantar a semente.", a: "Plante a semente. Dê o primeiro passo prático em direção ao seu objetivo financeiro ou de bem-estar. O universo está oferecendo o recurso; cabe a você usá-lo." },
+        { n: "2 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe02.jpg", f: "Malabarismo e adaptação. O foco está em equilibrar as finanças, o tempo ou as tarefas diárias. A energia é dinâmica e exige flexibilidade.", d: "Desequilíbrio ou estresse por excesso de tarefas. O risco de se sentir sobrecarregado tentando manter tudo funcionando ao mesmo tempo.", a: "Seja flexível. Não tente fixar nada hoje; aprenda a fluir com as mudanças. Priorize o que é essencial e mantenha o bom humor diante do caos." },
+        { n: "3 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe03.jpg", f: "Trabalho em equipe e competência. O foco está na colaboração profissional, no reconhecimento das suas habilidades e na construção de algo sólido.", d: "Individualismo ou falta de planejamento. O risco de querer fazer tudo sozinho e ignorar que a união de diferentes talentos traria um resultado melhor.", a: "Colabore e aprenda. Mostre seu valor através do seu trabalho bem feito. Esteja aberto ao feedback de especialistas e foque nos detalhes técnicos." },
+        { n: "4 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe04.jpg", f: "Estabilidade e conservação. O foco está em proteger seus bens, economizar dinheiro e estabelecer limites seguros. Energia de preservação.", d: "Avareza ou medo da mudança. O risco de se fechar tanto para proteger o que tem que acaba impedindo a entrada de novas energias e oportunidades.", a: "Organize suas finanças e proteja seu espaço. É um dia para ser cauteloso, mas lembre-se: a energia precisa circular para crescer. Não seja escravo das suas posses." },
+        { n: "5 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe05.jpg", f: "Dificuldade material ou sensação de escassez. O foco pode estar em preocupações financeiras ou problemas de saúde. Energia de provação.", d: "Orgulho ou vitimismo. O risco de focar apenas no que falta e não pedir ajuda, mesmo quando a solução está ao alcance (a porta da igreja iluminada).", a: "Procure apoio. Não enfrente as dificuldades sozinho. Reconheça que a fase é passageira e foque na resiliência mental para atravessar a tempestade." },
+        { n: "6 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe06.jpg", f: "Generosidade e trocas justas. O foco está em dar e receber. Pode indicar um empréstimo, um bônus ou simplesmente ajudar alguém em necessidade.", d: "Desequilíbrio de poder ou caridade por ego. O risco de criar uma relação de dependência ou se sentir superior por estar na posição de quem dá.", a: "Partilhe seus recursos. Seja generoso de forma equilibrada. Se você está recebendo, aceite com gratidão; se está dando, faça-o com desprendimento." },
+        { n: "7 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe07.jpg", f: "Paciência e avaliação. O foco está em olhar para o que você plantou e esperar o tempo da colheita. É um dia de pausa para refletir sobre os resultados.", d: "Impaciência ou desânimo. O risco de abandonar o projeto antes da hora por achar que o crescimento está lento demais.", a: "Espere com sabedoria. Nem tudo acontece no nosso tempo. Use o dia para avaliar se o caminho seguido está dando os frutos que você deseja." },
+        { n: "8 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe08.jpg", f: "Dedicação e aperfeiçoamento. O foco está no trabalho minucioso, no aprendizado de uma técnica e na disciplina diária. É o 'fazer com as mãos'.", d: "Perfeccionismo obsessivo ou rotina maçante. O risco de se perder tanto nos detalhes que esquece o quadro geral, ou se sentir um 'robô' do trabalho.", a: "Foque na excelência. Faça o seu melhor em cada pequena tarefa. A maestria vem da repetição e do amor pelo que se faz. Invista no seu conhecimento." },
+        { n: "9 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe09.jpg", f: "Independência e colheita. Você desfruta do conforto que conquistou com o próprio esforço. Energia de luxo, segurança e autossuficiência.", d: "Isolamento ou futilidade. O risco de se fechar no seu 'jardim particular' e esquecer da conexão com o mundo ou se tornar focado apenas nas aparências.", a: "Aproveite sua própria companhia e suas conquistas. Valorize sua independência. É um dia para desfrutar do belo e do bom que a vida material oferece." },
+        { n: "10 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe10.jpg", f: "Legado e estabilidade a longo prazo. O foco está na família, na herança, nas tradições e na segurança financeira que atravessa gerações.", d: "Prisão às aparências ou conflitos familiares por dinheiro. O risco de focar tanto na tradição que ignora as necessidades de mudança do presente.", a: "Pense no futuro. Honre suas raízes, mas construa bases sólidas para quem vem depois. Valorize a estabilidade familiar e os investimentos seguros." },
+        { n: "Pajem de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pepa.jpg", f: "Aprendizado e novas metas práticas. O foco está em começar um curso, uma dieta ou receber uma proposta de trabalho iniciante. Energia de pé no chão.", d: "Lentidão excessiva ou falta de ambição. O risco de ficar apenas no plano das ideias práticas sem nunca começar a agir de fato por excesso de cautela.", a: "Seja um aluno aplicado. Comece algo novo com seriedade. Foque nos fatos e nos dados. É hora de aprender a lidar com o mundo material de forma realista." },
+        { n: "Cavaleiro de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pekn.jpg", f: "Trabalho árduo e confiabilidade. O foco está na rotina, na persistência e na entrega de resultados. É o cavaleiro que avança devagar, mas nunca para.", d: "Estagnação ou teimosia. O risco de se tornar tão metódico que perde a criatividade ou se recusa a mudar de rota quando as circunstâncias pedem.", a: "Seja persistente e confiável. Cumpra seus prazos e mantenha sua palavra. A vitória de hoje vem do esforço contínuo e da atenção aos detalhes." },
+        { n: "Rainha de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pequ.jpg", f: "Praticidade e nutrição material. Você está focado em cuidar do corpo, da casa e das finanças com amor e eficiência. É a 'Mãe Terra' em ação.", d: "Preocupação excessiva com segurança ou materialismo. O risco de se tornar uma pessoa 'pesada', focada apenas no que é útil e esquecendo do espírito.", a: "Cuide do seu bem-estar físico e financeiro. Seja prático e generoso. Use seu bom senso para criar um ambiente de conforto e abundância ao seu redor." },
+        { n: "Rei de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/peki.jpg", f: "Maestria financeira e sucesso nos negócios. Você detém o poder sobre a matéria e sabe como multiplicar recursos. O foco é a liderança sólida.", d: "Tirania material ou ganância cega. O risco de medir o valor das pessoas apenas pelo que elas possuem, tornando-se alguém frio e focado apenas no lucro.", a: "Gerencie seus recursos com sabedoria. Seja o provedor confiável. Use seu sucesso para construir algo duradouro e estável para todos ao seu redor." },
+
+        // ESPADAS
+        { n: "Ás de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swac.jpg", f: "Um estalo de clareza. A energia é de um novo insight, uma decisão definitiva ou a descoberta de uma verdade oculta. É o poder da mente focado em um único ponto.", d: "Hostilidade ou excesso de frieza. O risco de usar a lógica como uma arma para ferir os outros ou se perder em um perfeccionismo mental que paralisa a ação.", a: "Fale a sua verdade. Use a lógica para cortar a confusão. Seja direto e objetivo, sem deixar que as emoções turvem o seu julgamento hoje." },
+        { n: "2 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw02.jpg", f: "Impasse e escolha difícil. O foco está na necessidade de decidir, mas você se sente dividido entre duas opções igualmente pesadas. Energia de trégua.", d: "Indecisão crônica ou negação. O risco de 'fechar os olhos' para os fatos óbvios apenas para não ter que lidar com as consequências de uma escolha.", a: "Tire a venda dos olhos. Analise os fatos com calma, mas entenda que a paralisia também é uma escolha. Busque o equilíbrio interno antes de agir." },
+        { n: "3 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw03.jpg", f: "Dor emocional e liberação. O foco está em uma decepção, tristeza ou a necessidade de encarar uma verdade dolorosa que 'atravessa o coração'.", d: "Ficar preso no sofrimento. O risco de remoer mágoas passadas ou deixar que o pessimimismo mental sabote o seu processo de cura.", a: "Permita-se sentir, mas busque entender a origem da dor. A verdade liberta, mesmo que machuque no início. Use a lógica para processar a emoção e siga em frente." },
+        { n: "4 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw04.jpg", f: "Descanso e recuperação. O foco hoje é o silêncio. A mente precisa de uma pausa após um período de estresse ou conflito. Energia de meditação.", d: "Procrastinação disfarçada de descanso. O risco de se retirar do mundo por medo de enfrentar os problemas, em vez de usar a pausa para se fortalecer.", a: "Recue. Tire um tempo para não fazer nada. Desligue as notificações, medite e recupere suas energias mentais. O mundo pode esperar até amanhã." },
+        { n: "5 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw05.jpg", f: "Conflito de egos e vitória vazia. O foco está em uma disputa onde 'ganhar' pode custar caro demais. Energia de tensão e ressentimento.", d: "Orgulho ferido ou comportamento antiético. O risco de querer vencer a qualquer custo, mesmo que isso signifique perder aliados ou agir com desonestidade.", a: "Escolha suas batalhas. Às vezes, o melhor é se retirar de uma discussão estéril. Avalie se o que você está defendendo vale o desgaste emocional." },
+        { n: "6 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw06.jpg", f: "Transição e busca por águas calmas. O foco está em deixar uma situação difícil para trás em direção a algo mais tranquilo. Energia de mudança mental.", d: "Resistência a abandonar o que é conhecido. O risco de carregar bagagens mentais pesadas demais para o novo ciclo, dificultando a sua própria viagem.", a: "Siga o fluxo da mudança. Aceite ajuda e entenda que o pior já passou. Foque no destino, não no que você está deixando para trás." },
+        { n: "7 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw07.jpg", f: "Estratégia e discrição. O foco está em agir por conta própria ou encontrar uma saída inteligente para um problema. Pode indicar a necessidade de privacidade.", d: "Engano ou fuga de responsabilidades. O risco de agir de forma desonesta, tentar 'dar um jeitinho' ou fugir de um confronto que deveria ser direto.", a: "Seja estratégico, mas ético. Se precisar fazer algo sozinho, faça-o com inteligência. Proteja seus planos e seus recursos, mas evite atalhos duvidosos." },
+        { n: "8 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw08.jpg", f: "Sensação de aprisionamento. O foco está em pensamentos limitantes que fazem você se sentir sem saída. A energia é de paralisia e medo.", d: "Vitimismo ou cegueira mental. O risco de acreditar que as cordas que te prendem são inquebráveis, quando, na verdade, você tem a chave para se soltar.", a: "Mude a perspectiva. Olhe para os espaços vazios entre as espadas. O seu maior obstáculo hoje é a sua própria mente; questione seus medos e dê o primeiro passo para fora da cela." },
+        { n: "9 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw09.jpg", f: "Ansiedade e preocupação. O foco está no 'pesadelo mental' — medos exagerados que tiram o sono. A energia é de estresse psicológico profundo.", d: "Paranoia ou isolamento na dor. O risco de acreditar que todos os seus piores cenários vão acontecer, criando um sofrimento antecipado e desnecessário.", a: "Saia da cabeça e volte para o corpo. Identifique o que é fato e o que é projeção do medo. Procure alguém de confiança para conversar; a luz do dia sempre diminui o tamanho do pesadelo." },
+        { n: "10 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw10.jpg", f: "O fim definitivo. O foco está em um encerramento abrupto, uma traição ou a sensação de ter chegado ao fundo do poço. Energia de 'basta'.", d: "Drama excessivo ou recusa em aceitar o fim. O risco de se sentir derrotado para sempre, ignorando que o 10 é o número que precede o recomeço.", a: "Aceite o encerramento. Não tente lutar contra o que já acabou. No fundo do poço, o único caminho agora é para cima. Deixe o que morreu para trás e prepare-se para o novo amanhecer." },
+        { n: "Pajem de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swpa.jpg", f: "Vigilância e novas ideias. O foco está em coletar informações, ser curioso e estar alerta a comunicações rápidas. Energia de mente afiada e jovem.", d: "Bisbilhotice ou imaturidade verbal. O risco de falar sem pensar, espalhar boatos ou ser defensivo diante de críticas construtivas.", a: "Observe e aprenda. Use sua inteligência para investigar os fatos antes de tirar conclusões. Seja o 'espião' da sua própria vida, agindo com astúcia e clareza." },
+        { n: "Cavaleiro de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swkn.jpg", f: "Ação rápida e determinação. O foco é avançar em direção a um objetivo com lógica e velocidade total. Energia de ímpeto intelectual e franqueza.", d: "Impaciência ou grosseria. O risco de 'atropelar' as pessoas com suas opiniões ou agir de forma impulsiva demais sem considerar o impacto emocional.", a: "Vá direto ao ponto. Use sua coragem intelectual para resolver problemas pendentes. Só tome cuidado para não ser tão honesto a ponto de ser cruel; equilibre a espada com o tato." },
+        { n: "Rainha de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swqu.jpg", f: "Discernimento e independência. O foco está em colocar limites claros, ser direto e agir com objetividade. Energia de soberania mental e resiliência.", d: "Frieza excessiva ou amargura. O risco de se fechar tanto em sua armadura lógica que você se torna inacessível ou severo demais com as falhas alheias.", a: "Corte o que é supérfluo. Use sua inteligência para organizar sua vida. Seja justo, honesto e mantenha seus limites firmes. Sua sabedoria vem da experiência." },
+        { n: "Rei de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swki.jpg", f: "Autoridade intelectual e justiça. O foco está na análise de fatos, em questões legais ou em aconselhamento profissional baseado na lógica pura.", d: "Rigidez ou manipulação intelectual. O risco de ser um juiz impiedoso que segue a letra da lei, mas esquece o espírito da compaixão e da humanidade.", a: "Aja com ética e imparcialidade. Use sua mente estratégica para liderar. Baseie suas decisões em evidências e mantenha o controle emocional. Hoje, a razão é a sua maior aliada." }
+    ];
+
+    let cartasEscolhidasCount = 0;
+
+    function inicializarBaralho() {
+        const palco = document.getElementById('palco');
+        const analise = document.getElementById('analise');
+        palco.innerHTML = '';
+        analise.style.display = 'none';
+        cartasEscolhidasCount = 0;
+        document.getElementById('msg-escolha').innerText = "Sintonize e escolha suas 3 cartas para o seu dia...";
+        document.getElementById('btn-embaralhar').innerText = "Misturar e Jogar";
+
+        const deckMisturado = [...baralhoMaster].sort(() => Math.random() - 0.5);
+
+        deckMisturado.forEach((info, i) => {
+            const div = document.createElement('div');
+            div.className = 'carta';
+            div.style.zIndex = i;
+            div.dataset.info = JSON.stringify(info);
+            div.innerHTML = `
+                <div class="face verso">✨</div>
+                <div class="face frente"><img src="${info.img}" alt="${info.n}"></div>
+            `;
+            div.onclick = () => clicarNaCarta(div);
+            palco.appendChild(div);
+        });
+    }
+
+    async function fluxoResetMisturar() {
+        inicializarBaralho();
+        const cartas = document.querySelectorAll('.carta');
+        document.getElementById('btn-embaralhar').classList.add('hidden');
+        document.getElementById('instrucoes').classList.add('hidden'); // Esconde as instruções após começar
+        
+        for(let j=0; j<2; j++) {
+            cartas.forEach(c => {
+                const rx = (Math.random()-0.5)*400;
+                const ry = (Math.random()-0.5)*60;
+                c.style.transform = `translate(${rx}px, ${ry}px) rotate(${(Math.random()-0.5)*60}deg)`;
+            });
+            await new Promise(r => setTimeout(r, 400));
+        }
+
+        cartas.forEach(c => c.style.transform = `translate(0,0) rotate(0deg)`);
+        document.getElementById('btn-escolher').classList.remove('hidden');
+    }
+
+    function abrirLeque() {
+        const cartas = document.querySelectorAll('.carta');
+        const pWidth = document.getElementById('palco').offsetWidth;
+        cartas.forEach((c, i) => {
+            const step = (pWidth * 0.92) / cartas.length;
+            const x = (i - (cartas.length - 1) / 2) * step;
+            const rot = (i - (cartas.length - 1) / 2) * 0.7;
+            c.style.transform = `translateX(${x}px) rotate(${rot}deg)`;
+        });
+        document.getElementById('btn-escolher').classList.add('hidden');
+        document.getElementById('msg-escolha').classList.remove('hidden');
+    }
+
+    function clicarNaCarta(el) {
+        if (cartasEscolhidasCount >= 3 || el.classList.contains('picked')) return;
+
+        cartasEscolhidasCount++;
+        el.classList.add('picked');
+        const info = JSON.parse(el.dataset.info);
+        const slot = document.getElementById(`slot-${cartasEscolhidasCount}`);
+        const pRect = document.getElementById('palco').getBoundingClientRect();
+        const sRect = slot.getBoundingClientRect();
+        
+        const dX = (sRect.left + sRect.width/2) - (pRect.left + pRect.width/2);
+        const dY = (sRect.top + sRect.height/2) - (pRect.top + pRect.height/2);
+
+        el.style.zIndex = 500 + cartasEscolhidasCount;
+        el.style.transform = `translate(${dX}px, ${dY}px) rotateY(180deg) scale(1.05)`;
+
+        document.getElementById('analise').style.display = 'block';
+        const txtField = document.querySelector(`#txt-${cartasEscolhidasCount} span`);
+        const nomeHtml = `<span class="carta-nome-txt">${info.n}</span>`;
+
+        if(cartasEscolhidasCount === 1) txtField.innerHTML = `: ${nomeHtml}<br>${info.f}`;
+        if(cartasEscolhidasCount === 2) txtField.innerHTML = `: ${nomeHtml}<br>${info.d}`;
+        if(cartasEscolhidasCount === 3) {
+            txtField.innerHTML = `: ${nomeHtml}<br>${info.a}`;
+            document.getElementById('msg-escolha').innerText = "Leitura completa. Gratidão! 🙏";
+            document.getElementById('btn-embaralhar').classList.remove('hidden');
+            document.getElementById('btn-embaralhar').innerText = "Nova Tiragem";
+        }
+    }
+
+    window.onload = inicializarBaralho;
+</script>
+</body>
+</html>
