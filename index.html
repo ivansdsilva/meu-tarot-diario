@@ -5,99 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarot - Oráculo Moderno Oficial</title>
     <style>
-        /* Estilos Base */
-        body { 
-            font-family: 'Georgia', serif; 
-            background: #05050a; 
-            color: #d4af37; 
-            margin: 0; 
-            padding-bottom: 50px; 
-            overflow-x: hidden;
-            user-select: none; 
-            -webkit-user-select: none;
-        }
+        body { font-family: 'Georgia', serif; background: #05050a; color: #d4af37; margin: 0; padding-bottom: 50px; overflow-x: hidden; user-select: none; -webkit-user-select: none; }
         .container { max-width: 1000px; margin: 0 auto; padding: 15px; text-align: center; }
-
-        /* Orientações */
-        .box-orientacoes {
-            background: rgba(212, 175, 55, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            font-size: 1.1em;
-            color: #f1e4bc;
-        }
+        .box-orientacoes { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 25px; margin-bottom: 30px; line-height: 1.6; font-size: 1.1em; color: #f1e4bc; }
         .pergunta-mentalizar { font-style: italic; color: #fff; display: block; margin-top: 15px; font-weight: bold; }
-
-        /* Botões */
         .controles { margin: 20px 0; min-height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
-        button { 
-            background: #d4af37; color: #05050a; border: none; padding: 18px 45px; 
-            font-size: 1.2em; cursor: pointer; border-radius: 10px; font-weight: bold;
-            transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
+        button { background: #d4af37; color: #05050a; border: none; padding: 18px 45px; font-size: 1.2em; cursor: pointer; border-radius: 10px; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
         button:hover { transform: scale(1.05); background: #f1c40f; }
         .hidden { display: none !important; }
-
-        /* Palco das Cartas (Ajustado para 3D) */
-        #palco { 
-            position: relative; width: 100%; height: 350px; margin: 20px 0; 
-            display: flex; justify-content: center; align-items: center; perspective: 2000px;
-        }
-        .carta { 
-            position: absolute; width: 120px; height: 200px; 
-            cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
-            transform-style: preserve-3d; z-index: 10;
-        }
-        .face { 
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; 
-            border-radius: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.5); overflow: hidden;
-        }
-        .verso { 
-            background: #1a1a2e; border: 2px solid #d4af37;
-            background-image: radial-gradient(circle, #d4af37 1px, transparent 1px); 
-            background-size: 10px 10px; 
-        }
+        #palco { position: relative; width: 100%; height: 350px; margin: 20px 0; display: flex; justify-content: center; align-items: center; perspective: 2000px; }
+        .carta { position: absolute; width: 120px; height: 200px; cursor: pointer; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1); transform-style: preserve-3d; z-index: 10; }
+        .face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.5); overflow: hidden; }
+        .verso { background: #1a1a2e; border: 2px solid #d4af37; background-image: radial-gradient(circle, #d4af37 1px, transparent 1px); background-size: 10px 10px; }
         .frente { background: #fff; transform: rotateY(180deg); border: 1px solid #000; }
         .frente img { width: 100%; height: 100%; object-fit: contain; }
-
-        /* Mesa de Tiragem */
-        .mesa { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: nowrap; }
-        .slot { 
-            width: 130px; height: 215px; border: 2px dashed rgba(212, 175, 55, 0.2); 
-            border-radius: 10px; padding: 5px; background: rgba(255,255,255,0.02);
-            display: flex; flex-direction: column; align-items: center;
-        }
+        .mesa { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        .slot { width: 130px; height: 215px; border: 2px dashed rgba(212, 175, 55, 0.2); border-radius: 10px; padding: 5px; background: rgba(255,255,255,0.02); display: flex; flex-direction: column; align-items: center; }
         .slot-title { font-size: 0.7em; color: #fff; margin-bottom: 8px; height: 35px; text-transform: uppercase; font-weight: bold; line-height: 1.1; }
-
-        /* Análise de Texto */
-        #analise { 
-            max-width: 850px; margin: 40px auto; padding: 30px; 
-            background: rgba(10, 10, 20, 0.98); border-radius: 20px; 
-            border: 1px solid #d4af37; text-align: left; display: none;
-        }
+        
+        /* Estilos da Análise Integrada */
+        #analise { max-width: 850px; margin: 40px auto; padding: 30px; background: rgba(10, 10, 20, 0.98); border-radius: 20px; border: 1px solid #d4af37; text-align: left; display: none; }
         .item-analise { margin-bottom: 25px; line-height: 1.7; border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding-bottom: 15px; }
         .item-analise strong { color: #d4af37; font-size: 1.1em; display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .parecer-geral { background: rgba(212, 175, 55, 0.1); padding: 20px; border-radius: 10px; border-left: 4px solid #d4af37; margin-top: 30px; }
+        .parecer-geral h3 { color: #d4af37; margin-top: 0; font-size: 1.3em; }
         .carta-nome-txt { color: #fff; font-style: italic; font-weight: bold; border-bottom: 1px solid #fff; }
 
-        /* AJUSTES PARA TELEMÓVEL (MOBILE) */
         @media (max-width: 600px) {
-            h1 { font-size: 1.5em; }
-            .box-orientacoes { font-size: 0.95em; padding: 15px; }
-            button { width: 90%; padding: 20px; font-size: 1.3em; }
-            
-            /* Cartas menores para caberem 3 lado a lado no ecrã */
             .carta { width: 90px; height: 150px; }
             .slot { width: 95px; height: 160px; }
-            #palco { height: 280px; }
-            .mesa { gap: 8px; }
-            .slot-title { font-size: 0.6em; height: 30px; }
-            
-            #analise { padding: 20px; font-size: 1.1em; }
+            .slot-title { font-size: 0.6em; }
         }
-
         footer { margin-top: 40px; padding: 20px; font-size: 0.8em; color: rgba(212, 175, 55, 0.5); border-top: 1px solid rgba(212, 175, 55, 0.1); }
     </style>
 </head>
@@ -121,7 +59,7 @@
     <div class="controles">
         <button id="btn-embaralhar" onclick="fluxoResetMisturar()">Misturar e Jogar</button>
         <button id="btn-escolher" class="hidden" onclick="abrirLeque()">Distribuir Cartas</button>
-        <h2 id="msg-escolha" class="hidden" style="color: #fff; font-weight: normal; font-size: 1.1em;">Escolha 3 cartas intuitivamente...</h2>
+        <h2 id="msg-escolha" class="hidden" style="color: #fff;">Escolha 3 cartas intuitivamente...</h2>
     </div>
 
     <div id="palco"></div>
@@ -136,6 +74,11 @@
         <div class="item-analise" id="txt-1"><strong>☀️ Foco do Dia</strong><span></span></div>
         <div class="item-analise" id="txt-2"><strong>⚠️ Desafio</strong><span></span></div>
         <div class="item-analise" id="txt-3"><strong>🧘 Melhor Atitude</strong><span></span></div>
+        
+        <div id="parecer-integrado" class="parecer-geral hidden">
+            <h3>📜 Parecer do Oráculo</h3>
+            <p id="texto-parecer"></p>
+        </div>
     </div>
 
     <footer>
@@ -144,20 +87,21 @@
 </div>
 
 <script>
+    // Banco de Dados Integral do Manuscrito do Oráculo Moderno 
     const baralhoMaster = [
-        // ARCANOS MAIORES
+        // Arcanos Maiores [cite: 2-132]
         { n: "0. O Louco", img: "https://www.sacred-texts.com/tarot/pkt/img/ar00.jpg", f: "Um salto no desconhecido. A energia é de novos começos, espontaneidade e liberdade. É um dia para confiar no universo e não se levar tão a sério.", d: "Falta de planejamento ou imprudência. O risco de agir sem olhar para onde está pisando ou ignorar avisos óbvios de perigo.", a: "Adote a mente de principiante. Arrisque-se, seja leve e permita-se o erro. O momento pede coragem, não cautela excessiva." },
         { n: "I. O Mago", img: "https://www.sacred-texts.com/tarot/pkt/img/ar01.jpg", f: "Manifestação e iniciativa. Você tem todas as ferramentas para fazer as coisas acontecerem. A energia é de competência, ação e poder pessoal.", d: "Dispersão de energia ou manipulação. Tentar fazer muitas coisas ao mesmo tempo sem concluir nenhuma, ou usar sua influência de forma desonesta.", a: "Foque sua vontade. Use suas habilidades práticas. É o dia de 'dar o play' nos projetos e assumir o controle da situação." },
         { n: "II. A Sacerdotisa", img: "https://www.sacred-texts.com/tarot/pkt/img/ar02.jpg", f: "Intuição e mistério. O dia pede recolhimento e observação. Nem tudo está visível na superfície; confie no seu 'sexto sentido' e nos sinais.", d: "Passividade excessiva ou segredos que incomodam. O risco de se isolar demais do mundo real ou ignorar fatos lógicos por estar 'perdido' em sonhos.", a: "Silencie. Antes de agir, ouça sua voz interior. Observe os bastidores e guarde seus planos para si mesmo por enquanto." },
         { n: "III. A Imperatriz", img: "https://www.sacred-texts.com/tarot/pkt/img/ar03.jpg", f: "Abundância e criatividade. A energia é de nutrição, prazer sensorial e crescimento. Ótimo dia para cuidar de projetos, da casa, da beleza ou da família.", d: "Superproteção ou gastos excessivos. O risco de sufocar alguém com cuidados ou se perder na indulgência material e na procrastinação.", a: "Seja generoso e criativo. Deixe as coisas florescerem no tempo delas. Conecte-se com a natureza e com o prazer de estar vivo." },
         { n: "IV. O Imperador", img: "https://www.sacred-texts.com/tarot/pkt/img/ar04.jpg", f: "Estrutura e autoridade. O foco está na organização, no estabelecimento de limites e na proteção do que é seu. Energia de estabilidade e liderança.", d: "Rigidez ou autoritarismo. Ser inflexível demais com os outros (ou consigo mesmo) a ponto de travar o movimento e a cooperação.", a: "Coloque ordem na casa. Planeje com lógica e firmeza. Assuma suas responsabilidades com seriedade e seja o pilar de segurança hoje." },
         { n: "V. O Hierofante", img: "https://www.sacred-texts.com/tarot/pkt/img/ar05.jpg", f: "Tradição e conhecimento. Dia de seguir as regras, buscar conselhos de mentores ou focar em estudos e questões institucionais.", d: "Dogmatismo ou pressão social. O risco de seguir padrões apenas para agradar os outros, mesmo quando eles não fazem mais sentido para você.", a: "Busque sabedoria em quem já trilhou o caminho. Respeite os processos estabelecidos e aja com ética e compromisso." },
-        { n: "VI. Os Enamorados", img: "https://www.sacred-texts.com/tarot/pkt/img/ar06.jpg", f: "Escolhas e parcerias. A energia é de alinhamento de values, decisões importantes e conexões afetivas. O foco é o que (ou quem) seu coração escolhe.", d: "Indecisão ou conflito de valores. Ficar em cima do muro ou tentar agradar a dois caminhos opostos, gerando ansiedade e desequilíbrio.", a: "Escolha com base no que você ama e acredita. Alinhe sua mente com o seu coração e comprometa-se com a sua decisão." },
+        { n: "VI. Os Enamorados", img: "https://www.sacred-texts.com/tarot/pkt/img/ar06.jpg", f: "Escolhas e parcerias. A energia é de alinhamento de valores, decisões importantes e conexões afetivas. O foco é o que (ou quem) seu coração escolhe.", d: "Indecisão ou conflito de valores. Ficar em cima do muro ou tentar agradar a dois caminhos opostos, gerando ansiedade e desequilíbrio.", a: "Escolha com base no que você ama e acredita. Alinhe sua mente com o seu coração e comprometa-se com a sua decisão." },
         { n: "VII. O Carro", img: "https://www.sacred-texts.com/tarot/pkt/img/ar07.jpg", f: "Vitória e determinação. Energia de movimento rápido, superação de obstáculos e controle sobre forças opostas. O foco é o triunfo pela força de vontade.", d: "Perda de controle ou agressividade. O risco de 'atropelar' as pessoas no caminho ou ser levado por impulsos contraditórios.", a: "Mantenha as rédeas firmes. Tenha foco total no seu objetivo e não se desvie. A vitória depende da sua disciplina e persistência." },
         { n: "VIII. A Justiça", img: "https://www.sacred-texts.com/tarot/pkt/img/ar08.jpg", f: "Equilíbrio e causa e efeito. O dia pede objetividade, honestidade e ajustes de contas. O foco está na verdade nua e crua.", d: "Preconceito ou burocracia. O risco de ser excessivamente crítico ou se perder em julgamentos severos que ignoram o lado humano.", a: "Aja com integridade. Pese todos os lados antes de decidir. Aceite as consequências dos seus atos com maturidade e retidão." },
         { n: "IX. O Eremita", img: "https://www.sacred-texts.com/tarot/pkt/img/ar09.jpg", f: "Busca interior e prudência. Energia de isolamento necessário, reflexão profunda e busca pela verdade pessoal. O foco é a sua própria luz.", d: "Solidão amarga ou lentidão excessiva. O risco de se fechar para o mundo por medo ou demorar tanto para refletir que a oportunidade passa.", a: "Recolha-se. Busque a resposta dentro de você, não fora. Seja discreto, paciente e aja apenas quando tiver clareza total." },
         { n: "X. A Roda da Fortuna", img: "https://www.sacred-texts.com/tarot/pkt/img/ar10.jpg", f: "Mudança e destino. O dia traz reviravoltas, ciclos que se fecham e outros que se abrem. A energia é de movimento inesperado.", d: "Instabilidade ou resistência ao fluxo. Tentar controlar o incontrolável ou sentir-se vítima das circunstâncias externas.", a: "Adapte-se. Entenda que tudo passa. Aproveite o movimento ascendente da roda e não se desespere com os baixos; hoje, a flexibilidade é sua melhor amiga." },
-        { n: "XI. A Força", img: "https://www.sacred-texts.com/tarot/pkt/img/ar11.jpg", f: "Coragem e domínio próprio. O foco está na força interior, na paciência e na capacidade de domar seus 'leões internos' (emoções e instintos).", d: "Medo ou impulsividade. Deixar-se dominar pela raiva ou pela insegurança, perdendo a elegância e a resiliência diante dos problemas.", a: "Use a suavidade em vez da força bruta. Seja paciente e autoconfiante. A verdadeira força hoje vem da compaixão e do autocontrole." },
+        { n: "XI. A Força", img: "https://www.sacred-texts.com/tarot/pkt/img/ar08.jpg", f: "Coragem e domínio próprio. O foco está na força interior, na paciência e na capacidade de domar seus 'leões internos' (emoções e instintos).", d: "Medo ou impulsividade. Deixar-se dominar pela raiva ou pela insegurança, perdendo a elegância e a resiliência diante dos problemas.", a: "Use a suavidade em vez da força bruta. Seja paciente e autoconfiante. A verdadeira força hoje vem da compaixão e do autocontrole." },
         { n: "XII. O Pendurado", img: "https://www.sacred-texts.com/tarot/pkt/img/ar12.jpg", f: "Nova perspectiva e pausa. A energia é de suspensão e sacrifício voluntário. O foco é olhar para a vida de um ângulo diferente, mesmo que pareça parado.", d: "Paralisia ou papel de mártir. Ficar preso em uma situação sem agir por puro medo, ou reclamar de um sacrifício que você mesmo escolheu.", a: "Solte o controle. Não force nada hoje. Use esse tempo de espera para meditar e mudar seu ponto de vista. Às vezes, render-se é o caminho para a iluminação." },
         { n: "XIII. A Morte", img: "https://www.sacred-texts.com/tarot/pkt/img/ar13.jpg", f: "Transformação e encerramento. Algo precisa morrer para que o novo nasça. A energia é de limpeza, cortes necessários e renovação profunda.", d: "Resistência à mudança. Tentar segurar algo que já apodreceu, gerando sofrimento desnecessário e impedindo o fluxo da vida.", a: "Deixe ir. Aceite o fim de um ciclo sem olhar para trás. Limpe o espaço, desapegue-se do que não serve mais e prepare o terreno para o novo." },
         { n: "XIV. A Temperança", img: "https://www.sacred-texts.com/tarot/pkt/img/ar14.jpg", f: "Equilíbrio e moderação. Energia de cura, paciência e alquimia. O foco é misturar opostos para encontrar o caminho do meio e a harmonia.", d: "Desequilíbrio ou impaciência. Tentar apressar processos naturais ou cair em extremos (muito trabalho ou muito descanso, por exemplo).", a: "Seja paciente e diplomático. Busque a harmonia em todas as áreas. Aja com calma e misture os ingredientes da sua vida com sabedoria e parcimônia." },
@@ -169,7 +113,7 @@
         { n: "XX. O Julgamento", img: "https://www.sacred-texts.com/tarot/pkt/img/ar20.jpg", f: "Chamado e despertar. É o momento de uma grande conclusão ou de um 'renascimento'. O foco é ouvir o chamado para uma vida mais autêntica e significativa.", d: "Autocrítica excessiva ou medo de mudar. O risco de ficar preso ao passado por medo do julgamento alheio ou da própria consciência.", a: "Perdoe o passado e siga o chamado. Avalie sua trajetória com honestidade e aceite a transformação. É hora de despertar para um novo nível de consciência." },
         { n: "XXI. O Mundo", img: "https://www.sacred-texts.com/tarot/pkt/img/ar21.jpg", f: "Realização e completude. O fechamento perfeito de um ciclo. A energia é de integração, sucesso mundial e a sensação de estar no lugar certo, na hora certa.", d: "Medo de finalizar ou falta de visão. Recusar-se a celebrar a vitória por já estar preocupado com o próximo passo, ou sentir-se limitado quando o horizonte é vasto.", a: "Comemore! Sinta a plenitude do agora. Você completou a jornada. Reconheça seu sucesso e abra-se para o mundo; você está pronto para novos e maiores horizontes." },
 
-        // PAUS
+        // Naipe de Paus [cite: 137-222]
         { n: "Ás de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waac.jpg", f: "Uma centelha de inspiração. A energia é de um novo começo empolgante, uma ideia brilhante ou um surto de vitalidade. É o momento de plantar a semente de um projeto.", d: "Falta de direção ou pressa excessiva. O risco de se empolgar com a novidade, mas não ter onde canalizar essa energia, desperdiçando o potencial inicial.", a: "Agarre a oportunidade! Use esse ímpeto para iniciar algo que te apaixona. Não se preocupe com os detalhes agora; foque no movimento inicial." },
         { n: "2 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa02.jpg", f: "Planejamento e visão de futuro. Você está em uma posição de poder, olhando o horizonte e decidindo qual caminho seguir. A energia é de antecipação e escolha.", d: "Indecisão ou medo de sair da zona de conforto. O risco de ficar apenas olhando para o mapa e nunca chegar a cruzar a porta para o mundo real.", a: "Faça uma escolha consciente. O mundo está em suas mãos, mas você precisa se comprometer com um objetivo para que a expansão aconteça." },
         { n: "3 de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/wa03.jpg", f: "Expansão e espera ativa. Seus planos estão em movimento e você começa a ver os primeiros sinais de progresso. A energia é de crescimento e exploração comercial ou pessoal.", d: "Impaciência ou falta de visão de longo prazo. O risco de se desanimar porque os resultados finais ainda não chegaram, ou não estar preparado para o sucesso que vem vindo.", a: "Mantenha o olhar no horizonte. Confie no que você plantou. Este é o momento de buscar novas parcerias e expandir sua área de atuação." },
@@ -185,7 +129,7 @@
         { n: "Rainha de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waqu.jpg", f: "Confiança e magnetismo. Você está radiante, independente e capaz de lidar com qualquer situação com calor e inteligência. O foco é a sua autoexpressão.", d: "Egocentrismo ou irritabilidade. Quando contrariada, essa energia pode se tornar mandona ou dramática demais. O risco é querer ser sempre o centro das atenções.", a: "Lidere com o coração e com o sorriso. Use sua intuição e sua coragem para iluminar o dia. Seja o sol de quem está ao seu redor, agindo com generosidade e brilho próprio." },
         { n: "Rei de Paus", img: "https://www.sacred-texts.com/tarot/pkt/img/waki.jpg", f: "Liderança visionária e autoridade. O foco está em grandes projetos, empreendedorismo e na capacidade de transformar visões em realidade através do comando.", d: "Tirania ou impaciência com os 'lentos'. O risco de se tornar um ditador que não ouve ninguém, focado apenas no seu próprio império e perdendo a empatia.", a: "Inspire pelo exemplo. Seja o líder que motiva através da visão e da integridade. Tome decisões grandes com coragem, mas não esqueça que grandes reinos são feitos de pessoas." },
 
-        // COPAS
+        // Naipe de Copas [cite: 227-307]
         { n: "Ás de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuac.jpg", f: "Despertar emocional. Uma nova oferta de amor, um insight espiritual ou uma onda de paz. O coração está aberto e receptivo.", d: "Vulnerabilidade excessiva ou carência. O risco de se afogar em emoções sem filtro ou esperar que algo externo preencha um vazio interno.", a: "Permita-se sentir. Seja receptivo ao amor e à compaixão. É um dia para 'encher o próprio cálice' e oferecer o melhor de si aos outros." },
         { n: "2 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu02.jpg", f: "Conexão e afinidade. O foco está na troca equilibrada entre duas pessoas, seja um romance, uma amizade ou uma parceria de negócios harmoniosa.", d: "Dependência emocional ou focar apenas no outro. O risco de ignorar as próprias necessidades para manter a harmonia da relação.", a: "Busque parcerias. Colabore, converse e encontre pontos em comum. A união de forças hoje é o que trará os melhores resultados." },
         { n: "3 de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cu03.jpg", f: "Celebração e amizade. Energia de grupo, reuniões alegres e apoio mútuo. O foco é compartilhar a felicidade com quem você gosta.", d: "Excesso de distração ou 'fofoca'. O risco de se perder em superficialidades sociais e esquecer das responsabilidades individuais.", a: "Comemore! Saia com amigos, agradeça pelo apoio que recebe e cultive um ambiente de leveza e camaradagem ao seu redor." },
@@ -201,7 +145,7 @@
         { n: "Rainha de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuqu.jpg", f: "Empatia e intuição profunda. Você está em sintonia com os sentimentos alheios e com os seus próprios. O foco é o acolhimento e a escuta.", d: "Instabilidade emocional ou absorver a dor do outro. O risco de se tornar uma 'esponja' emocional e acabar sobrecarregado pelo drama alheio.", a: "Seja o porto seguro. Confie na sua percepção espiritual. Ajude quem precisa, mas mantenha sua taça firme; cuide de si para poder cuidar dos outros." },
         { n: "Rei de Copas", img: "https://www.sacred-texts.com/tarot/pkt/img/cuki.jpg", f: "Equilíbrio emocional e sabedoria. Você domina seus sentimentos e sabe agir com calma mesmo sob pressão. O foco é a maturidade e o aconselhamento.", d: "Manipulação emocional ou frieza mascarada. O risco de usar o conhecimento sobre o outro para controlar a situação ou se fechar em uma postura 'superior'.", a: "Aja com serenidade. Seja o líder compassivo. Use sua experiência para mediar conflitos e manter a estabilidade emocional ao seu redor." },
 
-        // OUROS
+        // Naipe de Ouros [cite: 310-393]
         { n: "Ás de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/peac.jpg", f: "Oportunidade material sólida. Uma nova fonte de renda, um projeto promissor ou um investimento na saúde. O foco é a prosperidade tangível.", d: "Ganância ou medo de investir. O risco de deixar a oportunidade passar por insegurança ou querer resultados imediatos sem plantar a semente.", a: "Plante a semente. Dê o primeiro passo prático em direção ao seu objetivo financeiro ou de bem-estar. O universo está oferecendo o recurso; cabe a você usá-lo." },
         { n: "2 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe02.jpg", f: "Malabarismo e adaptação. O foco está em equilibrar as finanças, o tempo ou as tarefas diárias. A energia é dinâmica e exige flexibilidade.", d: "Desequilíbrio ou estresse por excesso de tarefas. O risco de se sentir sobrecarregado tentando manter tudo funcionando ao mesmo tempo.", a: "Seja flexível. Não tente fixar nada hoje; aprenda a fluir com as mudanças. Priorize o que é essencial e mantenha o bom humor diante do caos." },
         { n: "3 de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pe03.jpg", f: "Trabalho em equipe e competência. O foco está na colaboração profissional, no reconhecimento das suas habilidades e na construção de algo sólido.", d: "Individualismo ou falta de planejamento. O risco de querer fazer tudo sozinho e ignorar que a união de diferentes talentos traria um resultado melhor.", a: "Colabore e aprenda. Mostre seu valor através do seu trabalho bem feito. Esteja aberto ao feedback de especialistas e foque nos detalhes técnicos." },
@@ -217,7 +161,7 @@
         { n: "Rainha de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/pequ.jpg", f: "Praticidade e nutrição material. Você está focado em cuidar do corpo, da casa e das finanças com amor e eficiência. É a 'Mãe Terra' em ação.", d: "Preocupação excessiva com segurança ou materialismo. O risco de se tornar uma pessoa 'pesada', focada apenas no que é útil e esquecendo do espírito.", a: "Cuide do seu bem-estar físico e financeiro. Seja prático e generoso. Use seu bom senso para criar um ambiente de conforto e abundância ao seu redor." },
         { n: "Rei de Ouros", img: "https://www.sacred-texts.com/tarot/pkt/img/peki.jpg", f: "Maestria financeira e sucesso nos negócios. Você detém o poder sobre a matéria e sabe como multiplicar recursos. O foco é a liderança sólida.", d: "Tirania material ou ganância cega. O risco de medir o valor das pessoas apenas pelo que elas possuem, tornando-se alguém frio e focado apenas no lucro.", a: "Gerencie seus recursos com sabedoria. Seja o provedor confiável. Use seu sucesso para construir algo duradouro e estável para todos ao seu redor." },
 
-        // ESPADAS
+        // Naipe de Espadas [cite: 399-483]
         { n: "Ás de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/swac.jpg", f: "Um estalo de clareza. A energia é de um novo insight, uma decisão definitiva ou a descoberta de uma verdade oculta. É o poder da mente focado em um único ponto.", d: "Hostilidade ou excesso de frieza. O risco de usar a lógica como uma arma para ferir os outros ou se perder em um perfeccionismo mental que paralisa a ação.", a: "Fale a sua verdade. Use a lógica para cortar a confusão. Seja direto e objetivo, sem deixar que as emoções turvem o seu julgamento hoje." },
         { n: "2 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw02.jpg", f: "Impasse e escolha difícil. O foco está na necessidade de decidir, mas você se sente dividido entre duas opções igualmente pesadas. Energia de trégua.", d: "Indecisão crônica ou negação. O risco de 'fechar os olhos' para os fatos óbvios apenas para não ter que lidar com as consequências de uma escolha.", a: "Tire a venda dos olhos. Analise os fatos com calma, mas entenda que a paralisia também é uma escolha. Busque o equilíbrio interno antes de agir." },
         { n: "3 de Espadas", img: "https://www.sacred-texts.com/tarot/pkt/img/sw03.jpg", f: "Dor emocional e liberação. O foco está em uma decepção, tristeza ou a necessidade de encarar uma verdade dolorosa que 'atravessa o coração'.", d: "Ficar preso no sofrimento. O risco de remoer mágoas passadas ou deixar que o pessimimismo mental sabote o seu processo de cura.", a: "Permita-se sentir, mas busque entender a origem da dor. A verdade liberta, mesmo que machuque no início. Use a lógica para processar a emoção e siga em frente." },
@@ -235,13 +179,17 @@
     ];
 
     let cartasEscolhidasCount = 0;
+    let memoriaLeitura = { foco: "", desafio: "", atitude: "" };
 
     function inicializarBaralho() {
         const palco = document.getElementById('palco');
         const analise = document.getElementById('analise');
         palco.innerHTML = '';
         analise.style.display = 'none';
+        document.getElementById('parecer-integrado').classList.add('hidden');
         cartasEscolhidasCount = 0;
+        memoriaLeitura = { foco: "", desafio: "", atitude: "" };
+        
         document.getElementById('msg-escolha').innerText = "Sintonize e escolha 3 cartas...";
         document.getElementById('btn-embaralhar').innerText = "Misturar e Jogar";
 
@@ -281,14 +229,12 @@
         const cartas = document.querySelectorAll('.carta');
         const pWidth = document.getElementById('palco').offsetWidth;
         const totalCards = cartas.length;
-
-        // Ajuste inteligente para mobile: o leque ocupa 95% da largura
         const containerWidth = pWidth * 0.95;
         const step = containerWidth / (totalCards - 1);
 
         cartas.forEach((c, i) => {
             const x = (i * step) - (containerWidth / 2);
-            const rot = (i - (totalCards / 2)) * 0.4; // Curvatura menor no mobile
+            const rot = (i - (totalCards / 2)) * 0.4;
             c.style.transform = `translateX(${x}px) rotate(${rot}deg)`;
         });
         document.getElementById('btn-escolher').classList.add('hidden');
@@ -315,14 +261,36 @@
         const txtField = document.querySelector(`#txt-${cartasEscolhidasCount} span`);
         const nomeHtml = `<span class="carta-nome-txt">${info.n}</span>`;
 
-        if(cartasEscolhidasCount === 1) txtField.innerHTML = `: ${nomeHtml}<br>${info.f}`;
-        if(cartasEscolhidasCount === 2) txtField.innerHTML = `: ${nomeHtml}<br>${info.d}`;
+        if(cartasEscolhidasCount === 1) {
+            txtField.innerHTML = `: ${nomeHtml}<br>${info.f}`;
+            memoriaLeitura.foco = info.f;
+        }
+        if(cartasEscolhidasCount === 2) {
+            txtField.innerHTML = `: ${nomeHtml}<br>${info.d}`;
+            memoriaLeitura.desafio = info.d;
+        }
         if(cartasEscolhidasCount === 3) {
             txtField.innerHTML = `: ${nomeHtml}<br>${info.a}`;
+            memoriaLeitura.atitude = info.a;
+            
+            // Gera o parecer integrado
+            gerarParecerFinal();
+
             document.getElementById('msg-escolha').innerText = "Leitura completa. Gratidão! 🙏";
             document.getElementById('btn-embaralhar').classList.remove('hidden');
             document.getElementById('btn-embaralhar').innerText = "Nova Tiragem";
         }
+    }
+
+    function gerarParecerFinal() {
+        const containerParecer = document.getElementById('parecer-integrado');
+        const pTexto = document.getElementById('texto-parecer');
+        
+        // Ponte narrativa inteligente unindo as 3 partes do seu manuscrito [cite: 3-483]
+        const parecerFinal = `Hoje, a sua jornada começa com ${memoriaLeitura.foco} No entanto, para que essa energia flua de maneira plena, você precisará ter cautela com ${memoriaLeitura.desafio} O caminho para a harmonia e o sucesso neste dia será encontrado ao ${memoriaLeitura.atitude}`;
+        
+        pTexto.innerText = parecerFinal;
+        containerParecer.classList.remove('hidden');
     }
 
     window.onload = inicializarBaralho;
